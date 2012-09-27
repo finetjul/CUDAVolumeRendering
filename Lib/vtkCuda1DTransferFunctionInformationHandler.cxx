@@ -20,8 +20,9 @@
 
 vtkStandardNewMacro(vtkCUDA1DTransferFunctionInformationHandler);
 
-vtkCUDA1DTransferFunctionInformationHandler::vtkCUDA1DTransferFunctionInformationHandler()
-  {
+vtkCUDA1DTransferFunctionInformationHandler
+::vtkCUDA1DTransferFunctionInformationHandler()
+{
   this->colourFunction = NULL;
   this->opacityFunction = NULL;
   this->gradientopacityFunction = NULL;
@@ -38,75 +39,90 @@ vtkCUDA1DTransferFunctionInformationHandler::vtkCUDA1DTransferFunctionInformatio
 
   this->InputData = NULL;
   this->Reinitialize();
-  }
+}
 
-vtkCUDA1DTransferFunctionInformationHandler::~vtkCUDA1DTransferFunctionInformationHandler()
-  {
+vtkCUDA1DTransferFunctionInformationHandler
+::~vtkCUDA1DTransferFunctionInformationHandler()
+{
   this->Deinitialize();
   this->SetInputData(NULL, 0);
-  }
+}
 
-void vtkCUDA1DTransferFunctionInformationHandler::Deinitialize(int withData)
-  {
+void vtkCUDA1DTransferFunctionInformationHandler
+::Deinitialize(int vtkNotUsed(withData))
+{
   this->ReserveGPU();
   CUDA_vtkCUDA1DVolumeMapper_renderAlgo_UnloadTextures( this->TransInfo, this->GetStream() );
-  }
+}
 
-void vtkCUDA1DTransferFunctionInformationHandler::Reinitialize(int withData)
-  {
+void vtkCUDA1DTransferFunctionInformationHandler
+::Reinitialize(int vtkNotUsed(withData))
+{
   lastModifiedTime = 0;
   UpdateTransferFunction();
-  }
+}
 
-void vtkCUDA1DTransferFunctionInformationHandler::SetInputData(vtkImageData* inputData, int index)
-  {
-  if( inputData == this->InputData ) return;
+void vtkCUDA1DTransferFunctionInformationHandler
+::SetInputData(vtkImageData* inputData, int vtkNotUsed(index))
+{
+  if( inputData == this->InputData )
+    {
+    return;
+    }
 
   if (inputData == NULL)
     {
     this->InputData = NULL;
-    }else{
-      this->InputData = inputData;
-      this->Modified();
     }
-  }
+  else
+    {
+    this->InputData = inputData;
+    this->Modified();
+    }
+}
 
-void vtkCUDA1DTransferFunctionInformationHandler::SetColourTransferFunction(vtkColorTransferFunction* f)
-  {
+void vtkCUDA1DTransferFunctionInformationHandler
+::SetColourTransferFunction(vtkColorTransferFunction* f)
+{
   if( f != this->colourFunction )
     {
     this->colourFunction = f;
     this->lastModifiedTime = 0;
     this->Modified();
     }
-  }
+}
 
-void vtkCUDA1DTransferFunctionInformationHandler::SetOpacityTransferFunction(vtkPiecewiseFunction* f)
-  {
+void vtkCUDA1DTransferFunctionInformationHandler
+::SetOpacityTransferFunction(vtkPiecewiseFunction* f)
+{
   if( f != this->opacityFunction )
     {
     this->opacityFunction = f;
     this->lastModifiedTime = 0;
     this->Modified();
     }
-  }
+}
 
-void vtkCUDA1DTransferFunctionInformationHandler::SetGradientOpacityTransferFunction(vtkPiecewiseFunction* f)
-  {
+void vtkCUDA1DTransferFunctionInformationHandler
+::SetGradientOpacityTransferFunction(vtkPiecewiseFunction* f)
+{
   if( f != this->gradientopacityFunction )
     {
     this->gradientopacityFunction = f;
     this->lastModifiedTime = 0;
     this->Modified();
     }
-  }
+}
 
 void vtkCUDA1DTransferFunctionInformationHandler::UpdateTransferFunction()
-  {
+{
   //if we don't need to update the transfer function, don't
   if(!this->colourFunction || !this->opacityFunction ||
     (this->colourFunction->GetMTime() <= lastModifiedTime &&
-    this->opacityFunction->GetMTime() <= lastModifiedTime) ) return;
+    this->opacityFunction->GetMTime() <= lastModifiedTime) )
+    {
+    return;
+    }
   lastModifiedTime = (this->colourFunction->GetMTime() > this->opacityFunction->GetMTime()) ?
     this->colourFunction->GetMTime() : this->opacityFunction->GetMTime();
 
@@ -176,22 +192,23 @@ void vtkCUDA1DTransferFunctionInformationHandler::UpdateTransferFunction()
   delete LocalColorWholeTransferFunction;
   delete LocalAlphaTransferFunction;
   delete LocalGAlphaTransferFunction;
-  }
+}
 
 void vtkCUDA1DTransferFunctionInformationHandler::UseGradientOpacity(int u)
-  {
+{
   this->useGradientOpacity = (u != 0);
-  }
+}
 
 void vtkCUDA1DTransferFunctionInformationHandler::Update()
-  {
-  if(this->InputData){
+{
+  if(this->InputData)
+    {
     this->InputData->Update();
     this->Modified();
     }
-  if(this->colourFunction && this->opacityFunction){
+  if(this->colourFunction && this->opacityFunction)
+    {
     this->UpdateTransferFunction();
     this->Modified();
     }
-  }
-
+}

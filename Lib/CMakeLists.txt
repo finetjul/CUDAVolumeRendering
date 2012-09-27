@@ -41,7 +41,7 @@ set(Kit_RegularMapper_SRCS
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${vtkCUDATesting_INCLUDE_DIRS}
+  ${CUDA_INCLUDE_DIRS}
   )
 
 set(MY_EXPORT_HEADER_PREFIX ${KIT})
@@ -52,8 +52,9 @@ configure_file(
   ${Slicer_EXPORT_HEADER_TEMPLATE}
   ${CMAKE_CURRENT_BINARY_DIR}/${MY_EXPORT_HEADER_PREFIX}Export.h
   )
+
 cuda_add_library( ${KIT} ${KIT_SRCS} )
-target_link_libraries( ${KIT} ${KIT_LIBS} )
+target_link_libraries( ${KIT} ${KIT_LIBS})
 
 install(TARGETS ${KIT}
   RUNTIME DESTINATION ${Slicer_INSTALL_LIB_DIR} COMPONENT RuntimeLibraries

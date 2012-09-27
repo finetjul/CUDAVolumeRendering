@@ -32,7 +32,8 @@ vtkCUDADeviceManager::vtkCUDADeviceManager(){
 
   //create the locks
   this->regularLock = 0;
-  int n = this->GetNumberOfDevices();
+  // \tbd is something missing here ?
+  //int n = this->GetNumberOfDevices();
 
   }
 
@@ -123,7 +124,8 @@ bool vtkCUDADeviceManager::ReturnDevice(vtkCUDAObject* caller, int device){
   std::multimap<cudaStream_t*,vtkCUDAObject*>::iterator it2 = this->StreamToObjectMap.begin();
   for( ; it2 != this->StreamToObjectMap.end(); it2++ ){
     if( this->StreamToDeviceMap[(it2->first)] == device ){
-      cudaStream_t* tempStreamPointer = it2->first;
+      // \tbd is something missing here ?
+      //cudaStream_t* tempStreamPointer = it2->first;
       }
     }
   for( std::set<cudaStream_t*>::iterator it = streamsToReturn.begin();

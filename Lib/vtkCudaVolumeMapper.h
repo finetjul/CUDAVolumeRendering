@@ -44,6 +44,7 @@ public:
   vtkTypeMacro (vtkCUDAVolumeMapper,vtkVolumeMapper);
   void PrintSelf( ostream& os, vtkIndent indent );
 
+  using vtkVolumeMapper::SetInput;
   /** @brief Sets the 3D image data for the first frame in the 4D sequence
   *
   *  @param image The 3D image data.
