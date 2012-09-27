@@ -165,25 +165,26 @@ void vtkCUDA1DVolumeMapper::ChangeFrameInternal(unsigned int frame){
     }
   }
 
-void vtkCUDA1DVolumeMapper::InternalRender (  vtkRenderer* ren, vtkVolume* vol,
+void vtkCUDA1DVolumeMapper::InternalRender (  vtkRenderer* vtkNotUsed(ren), vtkVolume* vol,
                                             const cudaRendererInformation& rendererInfo,
                                             const cudaVolumeInformation& volumeInfo,
-                                            const cudaOutputImageInformation& outputInfo ){
-                                              //handle the transfer function changes
-                                              this->transferFunctionInfoHandler->SetColourTransferFunction( vol->GetProperty()->GetRGBTransferFunction() );
-                                              this->transferFunctionInfoHandler->SetOpacityTransferFunction( vol->GetProperty()->GetScalarOpacity() );
-                                              this->transferFunctionInfoHandler->SetGradientOpacityTransferFunction( vol->GetProperty()->GetGradientOpacity() );
-                                              this->transferFunctionInfoHandler->UseGradientOpacity( !vol->GetProperty()->GetDisableGradientOpacity() );
-                                              this->transferFunctionInfoHandler->Update();
+                                            const cudaOutputImageInformation& outputInfo )
+{
+  //handle the transfer function changes
+  this->transferFunctionInfoHandler->SetColourTransferFunction( vol->GetProperty()->GetRGBTransferFunction() );
+  this->transferFunctionInfoHandler->SetOpacityTransferFunction( vol->GetProperty()->GetScalarOpacity() );
+  this->transferFunctionInfoHandler->SetGradientOpacityTransferFunction( vol->GetProperty()->GetGradientOpacity() );
+  this->transferFunctionInfoHandler->UseGradientOpacity( !vol->GetProperty()->GetDisableGradientOpacity() );
+  this->transferFunctionInfoHandler->Update();
 
-                                              //perform the render
-                                              this->tfLock->Lock();
-                                              this->ReserveGPU();
-                                              this->erroredOut = !CUDA_vtkCUDA1DVolumeMapper_renderAlgo_doRender(outputInfo, rendererInfo, volumeInfo,
-                                                this->transferFunctionInfoHandler->GetTransferFunctionInfo(), this->GetStream());
-                                              this->tfLock->Unlock();
+  //perform the render
+  this->tfLock->Lock();
+  this->ReserveGPU();
+  this->erroredOut = !CUDA_vtkCUDA1DVolumeMapper_renderAlgo_doRender(outputInfo, rendererInfo, volumeInfo,
+								     this->transferFunctionInfoHandler->GetTransferFunctionInfo(), this->GetStream());
+  this->tfLock->Unlock();
 
-  }
+}
 
 void vtkCUDA1DVolumeMapper::ClearInputInternal()
   {

@@ -61,7 +61,7 @@ vtkCUDAVolumeMapper::vtkCUDAVolumeMapper()
 }
 
 //----------------------------------------------------------------------------
-void vtkCUDAVolumeMapper::Deinitialize(int withData)
+void vtkCUDAVolumeMapper::Deinitialize(int vtkNotUsed(withData))
 {
   CUDA_vtkCUDAVolumeMapper_renderAlgo_unloadrandomRayOffsets(this->GetStream());
 }

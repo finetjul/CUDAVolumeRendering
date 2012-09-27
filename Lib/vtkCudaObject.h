@@ -26,7 +26,7 @@ public:
 
   void ReserveGPU( );
   void CallSyncThreads( );
-  cudaStream_t* vtkCUDAObject::GetStream( );
+  cudaStream_t* GetStream( );
 
   void ReplicateObject( vtkCUDAObject* object, int withData = 0  );
 
